@@ -1,0 +1,86 @@
+﻿<Window x:Class="Solution.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Solution"
+        mc:Ignorable="d" Background="Gray"
+        ResizeMode="NoResize"
+        Title="Form" Height="400" Width="740" Loaded="Window_Loaded">
+    <Window.Resources>
+        <CollectionViewSource x:Key="personViewSource" />
+        <CollectionViewSource x:Key="personPhoneViewSource" 
+                              Source="{Binding Phones, Source={StaticResource personViewSource}}"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <ListView Grid.Column="0"  x:Name="PeopleView" Margin="5" SelectionChanged="ClickToChooseItem" ItemsSource="{Binding Source={StaticResource personViewSource}}" >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn x:Name="IdGVC" Header="Id" DisplayMemberBinding="{Binding PersonId}"  />
+                        <GridViewColumn Header="Vorname" DisplayMemberBinding="{Binding FirstName}"/>
+                        <GridViewColumn Header="Nachname"  DisplayMemberBinding="{Binding LastName}"/>
+                        <GridViewColumn Header="Strasse" DisplayMemberBinding="{Binding Street}"/>
+                        <GridViewColumn Header="Stadt" DisplayMemberBinding="{Binding City}"/>
+                        <GridViewColumn Header="PLZ" DisplayMemberBinding="{Binding ZipCode}" />
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                       Content="Telefonnummer"
+                       VerticalAlignment="Center"
+                       Click="ShowPhoneInformation" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <DataGrid Grid.Column="1" Margin="5" x:Name="phoneDataGrid" AutoGenerateColumns="False" RowDetailsVisibilityMode="VisibleWhenSelected" 
+          EnableRowVirtualization="True" 
+                      ItemsSource="{Binding Source={StaticResource personPhoneViewSource}}" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding PersonId}" Header="Id" Width="SizeToHeader"/>
+                    <DataGridTextColumn Binding="{Binding PhoneNumber}" Header="Telefonnummer" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        
+        <Grid Grid.Row="1" Margin="5" x:Name="ItemGrid"  >
+            <Label Content="Vorname" HorizontalAlignment="Left" Margin="3,0,0,0"   VerticalAlignment="Top"/>
+            <Label Content="Nachname" HorizontalAlignment="Left" Margin="3,35,0,0" VerticalAlignment="Top"/>
+            <Label Content="Strasse" HorizontalAlignment="Left" Margin="3,70,0,0"   VerticalAlignment="Top"/>
+            <Label Content="Stadt" HorizontalAlignment="Left" Margin="3,105,0,0" VerticalAlignment="Top"/>
+            <Label Content="PLZ" HorizontalAlignment="Left" Margin="3,140,0,0"   VerticalAlignment="Top"/>
+
+            <TextBox Name="FirstNameTextBox" Text="{Binding FirstName}" HorizontalAlignment="Left"  Margin="100,0,0,0" Width="200" Height="20" VerticalAlignment="Top"/>
+            <TextBox Name="LastNameTextBox" Text="{Binding LastName}" HorizontalAlignment="Left" Margin="100,35,0,0" Width="200" Height="20" VerticalAlignment="Top"/>
+            <TextBox Name="StreetTextBox" Text="{Binding Street}" HorizontalAlignment="Left"  Margin="100,70,0,0" Width="200" Height="20" VerticalAlignment="Top"/>
+            <TextBox Name="CityTextBox" Text="{Binding City}" HorizontalAlignment="Left" Margin="100,105,0,0" Width="200" Height="20" VerticalAlignment="Top"/>
+            <TextBox Name="ZipCodeTextBox" Text="{Binding ZipCode}" HorizontalAlignment="Left"  Margin="100,140,0,0" Width="200" Height="20" VerticalAlignment="Top"/>
+
+            <Label Content="Suche" HorizontalAlignment="Left" Margin="450,0,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="SearchTextBox" TextChanged="ShowSearchedItem" HorizontalAlignment="Left"  Margin="500,0,0,0" Width="230" Height="20" VerticalAlignment="Top"/>
+
+            <Image x:Name="imagePhoto" Margin="220,0,0,0" Height="80px" Width="80px"/>
+            <Button Width="100" Click="UploadPhoto" Content="Wähle ein Foto"  Margin="610,0,0,0" VerticalAlignment="Center"/>
+            
+            <Button Width="140" Click="AddNewItem"  Content="Speichern neue Person"  Margin="570,60,0,0"  VerticalAlignment="Center"/>
+            <Button Width="60" Click="ClearItemForm" Content="Leeren"  Margin="200,120,0,0" VerticalAlignment="Center"/>
+            <Button Width="60" Click="UpdateItem"  Content="Editieren"  Margin="500,120,0,0"  VerticalAlignment="Center"/>
+
+            <Button Width="60" Click="DeleteItem" Content="Löschen"  Margin="650,120,0,0" VerticalAlignment="Center"/>
+        </Grid>
+    </Grid>
+</Window>
